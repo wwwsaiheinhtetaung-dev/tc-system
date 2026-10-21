@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Stars Private School - TC ရှာဖွေစစ်ဆေးရေးစနစ် (Teachers App)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face {
+            font-family: 'Pyidaungsu';
+            src: url('https://raw.githubusercontent.com/moneylane/pyidaungsu-font/master/Pyidaungsu.ttf') format('truetype');
+        }
+        body { font-family: 'Pyidaungsu', sans-serif; background-color: #F0F4F8; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 pb-12">
+
+    <!-- Header Banner -->
+    <header class="bg-blue-900 text-white shadow-md py-5 px-4 mb-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-2xl md:text-3xl font-bold tracking-wide">Future Stars Private School</h1>
+            <p class="text-blue-200 text-sm md:text-base mt-1">TC ပျောက်ဆုံး/ ကန့်သတ် စာရင်း အမြန်ရှာဖွေစစ်ဆေးရေး (Teachers Portal)</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4">
+
+        <!-- Search Box Card -->
+        <div class="bg-amber-50 rounded-2xl shadow-md p-6 mb-6 border-2 border-amber-300">
+            <label for="search-input" class="block text-center font-bold text-amber-900 text-lg mb-2">
+                🔍 TC အမှတ် (သို့မဟုတ်) ကျောင်းသားအမည်ဖြင့် ရှာရန်
+            </label>
+            <div class="relative max-w-xl mx-auto">
+                <input type="text" id="search-input" placeholder="ဥပမာ - TC-1004 သို့မဟုတ် မောင်..." 
+                    class="w-full px-4 py-3.5 pl-12 text-lg font-bold bg-white border-2 border-amber-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 shadow-inner text-slate-900 placeholder-slate-400">
+                <span class="absolute left-4 top-4 text-xl">🔎</span>
+            </div>
+            <p class="text-center text-xs text-amber-800 mt-2">စာလုံးရိုက်ထည့်လိုက်သည်နှင့် တစ်ပြိုင်နက် ရလဒ်များ အလိုအလျောက် ပေါ်လာပါမည်။</p>
+        </div>
+
+        <!-- Result Status Banner -->
+        <div id="status-banner" class="rounded-xl p-4 mb-6 text-center font-bold text-lg shadow-sm transition-all duration-300 bg-blue-100 text-blue-900 border border-blue-300">
+            ℹ️ စစ်ဆေးလိုသော TC အမှတ် သို့မဟုတ် အမည်ကို အထက်ပါအကွက်တွင် ရိုက်ထည့်ပါ။
+        </div>
+
+        <!-- Detailed Result Card (Hidden by default) -->
+        <div id="result-container" class="hidden space-y-6">
+            <!-- Table View -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-800 text-white px-4 py-3 font-bold text-sm">
+                    📋 ရှာဖွေတွေ့ရှိသည့် စာရင်းအချက်အလက်
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                                <th class="p-3 font-bold text-center">စဉ်</th>
+                                <th class="p-3 font-bold text-center">ကျောင်းဝင်အမှတ်</th>
+                                <th class="p-3 font-bold">အမည်</th>
+                                <th class="p-3 font-bold">အဘအမည်</th>
+                                <th class="p-3 font-bold text-center">TC အမှတ်</th>
+                                <th class="p-3 font-bold text-center">အတန်း</th>
+                                <th class="p-3 font-bold">မှတ်ချက်</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-result-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Card View for Mobile -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
+                <h3 class="font-bold text-slate-700 text-sm border-b pb-2">📱 အသေးစိတ် ကတ်ပြားပုံစံ</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <span class="block text-xs font-bold text-slate-400">ကျောင်းဝင်အမှတ်</span>
+                        <span id="card-adm" class="font-semibold text-slate-800">-</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <span class="block text-xs font-bold text-slate-400">အမည်</span>
+                        <span id="card-name" class="font-bold text-blue-900">-</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <span class="block text-xs font-bold text-slate-400">အဘအမည်</span>
+                        <span id="card-father" class="text-slate-800">-</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <span class="block text-xs font-bold text-slate-400">TC အမှတ်</span>
+                        <span id="card-tc" class="font-bold text-red-600">-</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <span class="block text-xs font-bold text-slate-400">အတန်း</span>
+                        <span id="card-grade" class="font-semibold text-slate-800">-</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 md:col-span-2">
+                        <span class="block text-xs font-bold text-slate-400">မှတ်ချက် / အကြောင်းရင်း</span>
+                        <span id="card-remark" class="text-red-700 font-medium">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary & Quick Stats -->
+        <div class="mt-8 bg-white rounded-xl shadow-sm border border-slate-200 p-5 text-center">
+            <p class="text-xs text-slate-500">လက်ရှိစစ်ဆေးနိုင်သော TC ပျောက်ဆုံးစာရင်း စုစုပေါင်း: <strong class="text-blue-900" id="total-count">0</strong> စောင်</p>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-xs text-slate-500 border-t border-slate-200 mt-12">
+        Future Stars Private School &copy; 2026. Teachers Search Portal.
+    </footer>
+
+    <script>
+        let defaultData = [
+            { adm: "KG-24/0102", name: "မောင်ဘုန်းမြတ်သူ", father: "ဦးအောင်ကျော်မိုး", tc: "TC-1001", grade: "KG", remark: "TC မူရင်းပျောက်ဆုံးကြောင်း တိုင်ကြားထားသည်" },
+            { adm: "G1-24/0215", name: "မဆုမြတ်နိုးဦး", father: "ဦးမြင့်ဆွေ", tc: "TC-1002", grade: "Grade 1", remark: "TC မူရင်းပျောက်ဆုံး (ကန့်သတ်)" },
+            { adm: "G2-23/0089", name: "မောင်သုတအောင်", father: "ဦးဇော်မင်းထွန်း", tc: "TC-1003", grade: "Grade 2", remark: "ကျောင်းပြောင်းလက်မှတ် ပျောက်ဆုံး" },
+            { adm: "G3-23/0412", name: "မယွန်းဝတီလွင်", father: "ဦးသန်းထိုက်အောင်", tc: "TC-1004", grade: "Grade 3", remark: "မူလကျောင်းမှ ပယ်ဖျက်ထားသော TC ဖြစ်သည်" },
+            { adm: "G4-22/0178", name: "မောင်ကောင်းထက်စံ", father: "ဦးကျော်ဇေယျ", tc: "TC-1005", grade: "Grade 4", remark: "TC မူရင်းပျောက်ဆုံးကြောင်း အကြောင်းကြားစာရရှိ" },
+            { adm: "G5-22/0334", name: "မချယ်ရီသင်း", father: "ဦးဝင်းနိုင်ဦး", tc: "TC-1006", grade: "Grade 5", remark: "စာရွက်စာတမ်း မပြည့်စုံ၍ ကန့်သတ်ထားသည်" },
+            { adm: "G1-24/0510", name: "မောင်ဉာဏ်လင်းထက်", father: "ဦးစိုးမိုးအောင်", tc: "TC-1007", grade: "Grade 1", remark: "TC မူရင်းပျောက်ဆုံး" },
+            { adm: "G2-24/0199", name: "မနန်းခမ်းလှိုင်", father: "ဦးထွန်းထွန်းဝင်း", tc: "TC-1008", grade: "Grade 2", remark: "မိဘမှ ပျောက်ဆုံးကြောင်း အကြောင်းကြားထားသည်" },
+            { adm: "G3-23/0276", name: "မောင်ဟိန်းထက်ဇော်", father: "ဦးနေလင်းအောင်", tc: "TC-1009", grade: "Grade 3", remark: "TC အမှတ် ထပ်နေသဖြင့် စိစစ်ဆဲ" },
+            { adm: "G4-23/0611", name: "မသွန်းရတီစိုး", father: "ဦးသက်နိုင်စိုး", tc: "TC-1010", grade: "Grade 4", remark: "TC မူရင်းပျောက်ဆုံး (လက်မခံရ)" },
+            { adm: "G5-21/0095", name: "မောင်အောင်ဘုန်းပြည့်", father: "ဦးခင်မောင်သန်း", tc: "TC-1011", grade: "Grade 5", remark: "ကျောင်းပြောင်းလက်မှတ် ပျောက်ဆုံး" },
+            { adm: "G6-21/0420", name: "မမေသက်ထားဆွေ", father: "ဦးမင်းသူရ", tc: "TC-1012", grade: "Grade 6", remark: "မူလကျောင်းမှ ကန့်သတ်အကြောင်းကြားထားသည်" },
+            { adm: "G7-20/0318", name: "မောင်ဇွဲမာန်ထက်", father: "ဦးရဲဝင်းထွဋ်", tc: "TC-1013", grade: "Grade 7", remark: "TC မူရင်းပျောက်ဆုံး" },
+            { adm: "G8-20/0144", name: "မအိမ့်မှူးခင်", father: "ဦးတင်မိုးကျော်", tc: "TC-1014", grade: "Grade 8", remark: "အချက်အလက် ကွဲလွဲနေသဖြင့် ကန့်သတ်ထားသည်" },
+            { adm: "G9-19/0287", name: "မောင်ထက်မြတ်အောင်", father: "ဦးလှမျိုးအောင်", tc: "TC-1015", grade: "Grade 9", remark: "TC မူရင်းပျောက်ဆုံးကြောင်း တိုင်ကြားထားသည်" }
+        ];
+
+        function getDB() {
+            let data = localStorage.getItem('future_stars_tc_db');
+            if (!data) return defaultData;
+            return JSON.parse(data);
+        }
+
+        document.getElementById('total-count').textContent = getDB().length;
+
+        const searchInput = document.getElementById('search-input');
+        const statusBanner = document.getElementById('status-banner');
+        const resultContainer = document.getElementById('result-container');
+
+        searchInput.addEventListener('input', function() {
+            let db = getDB();
+            let query = this.value.trim().toLowerCase();
+            if (!query) {
+                statusBanner.className = "rounded-xl p-4 mb-6 text-center font-bold text-lg shadow-sm transition-all duration-300 bg-blue-100 text-blue-900 border border-blue-300";
+                statusBanner.innerHTML = "ℹ️ စစ်ဆေးလိုသော TC အမှတ် သို့မဟုတ် အမည်ကို အထက်ပါအကွက်တွင် ရိုက်ထည့်ပါ။";
+                resultContainer.classList.add('hidden');
+                return;
+            }
+
+            let matched = db.filter(item => 
+                (item.tc && item.tc.toLowerCase().includes(query)) ||
+                (item.name && item.name.toLowerCase().includes(query)) ||
+                (item.adm && item.adm.toLowerCase().includes(query))
+            );
+
+            if (matched.length > 0) {
+                statusBanner.className = "rounded-xl p-4 mb-6 text-center font-bold text-lg shadow-sm transition-all duration-300 bg-red-100 text-red-800 border-2 border-red-400";
+                statusBanner.innerHTML = `⚠️ သတိပြုရန် - ဤအချက်အလက်သည် ပျောက်ဆုံး/ကန့်သတ်စာရင်းတွင် ရှိနေပါသည်! (ကျောင်းအပ်လက်ခံ၍ မရပါ)`;
+                resultContainer.classList.remove('hidden');
+
+                let tableBody = document.getElementById('table-result-body');
+                tableBody.innerHTML = '';
+                matched.forEach((item) => {
+                    let globalIdx = db.findIndex(d => d.tc === item.tc) + 1;
+                    let tr = document.createElement('tr');
+                    tr.className = "bg-red-50 font-semibold";
+                    tr.innerHTML = `
+                        <td class="p-3 border text-center">${globalIdx}</td>
+                        <td class="p-3 border text-center font-mono">${item.adm}</td>
+                        <td class="p-3 border text-blue-900">${item.name}</td>
+                        <td class="p-3 border">${item.father}</td>
+                        <td class="p-3 border text-center text-red-600 font-mono">${item.tc}</td>
+                        <td class="p-3 border text-center">${item.grade}</td>
+                        <td class="p-3 border text-red-700">${item.remark}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+
+                let first = matched[0];
+                document.getElementById('card-adm').textContent = first.adm || '-';
+                document.getElementById('card-name').textContent = first.name || '-';
+                document.getElementById('card-father').textContent = first.father || '-';
+                document.getElementById('card-tc').textContent = first.tc || '-';
+                document.getElementById('card-grade').textContent = first.grade || '-';
+                document.getElementById('card-remark').textContent = first.remark || '-';
+
+            } else {
+                statusBanner.className = "rounded-xl p-4 mb-6 text-center font-bold text-lg shadow-sm transition-all duration-300 bg-green-100 text-green-800 border-2 border-green-400";
+                statusBanner.innerHTML = `✅ ကင်းရှင်းပါသည် - ဤအချက်အလက်သည် ပျောက်ဆုံးစာရင်းတွင် မရှိပါ။ (ကျောင်းအပ်လက်ခံနိုင်ပါသည်)`;
+                resultContainer.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

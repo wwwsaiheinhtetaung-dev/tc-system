@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Stars Private School - Admin Dashboard (TC Management)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Pyidaungsu';
+            src: url('https://raw.githubusercontent.com/moneylane/pyidaungsu-font/master/Pyidaungsu.ttf') format('truetype');
+        }
+        body { font-family: 'Pyidaungsu', sans-serif; background-color: #F8FAFC; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 pb-12">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-md py-4 px-4 mb-6">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+            <div>
+                <h1 class="text-xl font-bold">Future Stars Private School</h1>
+                <p class="text-slate-400 text-xs">Admin Panel - TC ပျောက်ဆုံးစာရင်း စီမံခန့်ခွဲရေးစနစ်</p>
+            </div>
+            <span class="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full">🔐 Admin Only</span>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 space-y-6">
+
+        <!-- Upload & Status Box -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+            <h2 class="font-bold text-slate-700 text-base mb-2">📊 Excel ဖိုင်မှတစ်ဆင့် ဒေတာအသစ်တင်သွင်းရန်</h2>
+            <p class="text-sm text-slate-500 mb-4">မိမိကျောင်း၏ Excel ဖိုင် (.xlsx, .csv) ကို တင်လိုက်ပါက Search App များတွင် ချက်ချင်း အလုပ်လုပ်မည်ဖြစ်ပါသည်။</p>
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+                <label class="cursor-pointer bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium px-5 py-2.5 rounded-lg shadow transition flex items-center gap-2 w-full sm:w-auto justify-center">
+                    <span>📁 Excel ဖိုင် ရွေးချယ်ပြီး တင်မည်</span>
+                    <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" class="hidden">
+                </label>
+                <button id="reset-default-btn" class="text-xs text-slate-500 hover:text-red-600 underline">မူလနမူနာစာရင်းသို့ ပြန်ပြောင်းရန်</button>
+            </div>
+            <p id="upload-status" class="text-xs font-semibold text-green-600 mt-3"></p>
+        </div>
+
+        <!-- Add Single Record Form -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+            <h2 class="font-bold text-slate-700 text-base mb-4">➕ စာရင်းအသစ် တစ်ခုချင်း ထည့်သွင်းရန်</h2>
+            <form id="add-form" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">ကျောင်းဝင်အမှတ်</label>
+                    <input type="text" id="input-adm" placeholder="ဥပမာ - KG-24/0102" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">ကျောင်းသား/သူ အမည် *</label>
+                    <input type="text" id="input-name" placeholder="ဥပမာ - မောင်ဘုန်းမြတ်သူ" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">အဘအမည်</label>
+                    <input type="text" id="input-father" placeholder="ဥပမာ - ဦးအောင်ကျော်မိုး" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">TC အမှတ် *</label>
+                    <input type="text" id="input-tc" placeholder="ဥပမာ - TC-1001" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">အတန်း</label>
+                    <select id="input-grade" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white">
+                        <option value="KG">KG</option>
+                        <option value="Grade 1">Grade 1</option>
+                        <option value="Grade 2">Grade 2</option>
+                        <option value="Grade 3">Grade 3</option>
+                        <option value="Grade 4">Grade 4</option>
+                        <option value="Grade 5">Grade 5</option>
+                        <option value="Grade 6">Grade 6</option>
+                        <option value="Grade 7">Grade 7</option>
+                        <option value="Grade 8">Grade 8</option>
+                        <option value="Grade 9">Grade 9</option>
+                        <option value="Grade 10">Grade 10</option>
+                        <option value="Grade 11">Grade 11</option>
+                        <option value="Grade 12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2 md:col-span-3">
+                    <label class="block text-xs font-bold text-slate-600 mb-1">မှတ်ချက် / အကြောင်းရင်း</label>
+                    <input type="text" id="input-remark" placeholder="ဥပမာ - TC မူရင်းပျောက်ဆုံးကြောင်း တိုင်ကြားထားသည်" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div class="sm:col-span-2 md:col-span-3 flex justify-end">
+                    <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-lg shadow">စာရင်းသွင်းမည်</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Current Records Table -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="font-bold text-slate-700 text-base">📚 လက်ရှိသိမ်းဆည်းထားသော စာရင်းများ (<span id="total-count">0</span> စောင်)</h2>
+                <button id="export-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow">📥 Excel ဖြင့် သိမ်းဆည်းရန် (Backup)</button>
+            </div>
+            <div class="overflow-x-auto max-h-[500px] overflow-y-auto border rounded-lg">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead class="sticky top-0 bg-slate-100 text-slate-700">
+                        <tr>
+                            <th class="p-2.5 border text-center">စဉ်</th>
+                            <th class="p-2.5 border text-center">ကျောင်းဝင်အမှတ်</th>
+                            <th class="p-2.5 border">အမည်</th>
+                            <th class="p-2.5 border">အဘအမည်</th>
+                            <th class="p-2.5 border text-center">TC အမှတ်</th>
+                            <th class="p-2.5 border text-center">အတန်း</th>
+                            <th class="p-2.5 border">မှတ်ချက်</th>
+                            <th class="p-2.5 border text-center">လုပ်ဆောင်ချက်</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let defaultData = [
+            { adm: "KG-24/0102", name: "မောင်ဘုန်းမြတ်သူ", father: "ဦးအောင်ကျော်မိုး", tc: "TC-1001", grade: "KG", remark: "TC မူရင်းပျောက်ဆုံးကြောင်း တိုင်ကြားထားသည်" },
+            { adm: "G1-24/0215", name: "မဆုမြတ်နိုးဦး", father: "ဦးမြင့်ဆွေ", tc: "TC-1002", grade: "Grade 1", remark: "TC မူရင်းပျောက်ဆုံး (ကန့်သတ်)" },
+            { adm: "G2-23/0089", name: "မောင်သုတအောင်", father: "ဦးဇော်မင်းထွန်း", tc: "TC-1003", grade: "Grade 2", remark: "ကျောင်းပြောင်းလက်မှတ် ပျောက်ဆုံး" },
+            { adm: "G3-23/0412", name: "မယွန်းဝတီလွင်", father: "ဦးသန်းထိုက်အောင်", tc: "TC-1004", grade: "Grade 3", remark: "မူလကျောင်းမှ ပယ်ဖျက်ထားသော TC ဖြစ်သည်" },
+            { adm: "G4-22/0178", name: "မောင်ကောင်းထက်စံ", father: "ဦးကျော်ဇေယျ", tc: "TC-1005", grade: "Grade 4", remark: "TC မူရင်းပျောက်ဆုံးကြောင်း အကြောင်းကြားစာရရှိ" },
+            { adm: "G5-22/0334", name: "မချယ်ရီသင်း", father: "ဦးဝင်းနိုင်ဦး", tc: "TC-1006", grade: "Grade 5", remark: "စာရွက်စာတမ်း မပြည့်စုံ၍ ကန့်သတ်ထားသည်" },
+            { adm: "G1-24/0510", name: "မောင်ဉာဏ်လင်းထက်", father: "ဦးစိုးမိုးအောင်", tc: "TC-1007", grade: "Grade 1", remark: "TC မူရင်းပျောက်ဆုံး" },
+            { adm: "G2-24/0199", name: "မနန်းခမ်းလှိုင်", father: "ဦးထွန်းထွန်းဝင်း", tc: "TC-1008", grade: "Grade 2", remark: "မိဘမှ ပျောက်ဆုံးကြောင်း အကြောင်းကြားထားသည်" },
+            { adm: "G3-23/0276", name: "မောင်ဟိန်းထက်ဇော်", father: "ဦးနေလင်းအောင်", tc: "TC-1009", grade: "Grade 3", remark: "TC အမှတ် ထပ်နေသဖြင့် စိစစ်ဆဲ" },
+            { adm: "G4-23/0611", name: "မသွန်းရတီစိုး", father: "ဦးသက်နိုင်စိုး", tc: "TC-1010", grade: "Grade 4", remark: "TC မူရင်းပျောက်ဆုံး (လက်မခံရ)" },
+            { adm: "G5-21/0095", name: "မောင်အောင်ဘုန်းပြည့်", father: "ဦးခင်မောင်သန်း", tc: "TC-1011", grade: "Grade 5", remark: "ကျောင်းပြောင်းလက်မှတ် ပျောက်ဆုံး" },
+            { adm: "G6-21/0420", name: "မမေသက်ထားဆွေ", father: "ဦးမင်းသူရ", tc: "TC-1012", grade: "Grade 6", remark: "မူလကျောင်းမှ ကန့်သတ်အကြောင်းကြားထားသည်" },
+            { adm: "G7-20/0318", name: "မောင်ဇွဲမာန်ထက်", father: "ဦးရဲဝင်းထွဋ်", tc: "TC-1013", grade: "Grade 7", remark: "TC မူရင်းပျောက်ဆုံး" },
+            { adm: "G8-20/0144", name: "မအိမ့်မှူးခင်", father: "ဦးတင်မိုးကျော်", tc: "TC-1014", grade: "Grade 8", remark: "အချက်အလက် ကွဲလွဲနေသဖြင့် ကန့်သတ်ထားသည်" },
+            { adm: "G9-19/0287", name: "မောင်ထက်မြတ်အောင်", father: "ဦးလှမျိုးအောင်", tc: "TC-1015", grade: "Grade 9", remark: "TC မူရင်းပျောက်ဆုံးကြောင်း တိုင်ကြားထားသည်" }
+        ];
+
+        function getDB() {
+            let data = localStorage.getItem('future_stars_tc_db');
+            if (!data) {
+                localStorage.setItem('future_stars_tc_db', JSON.stringify(defaultData));
+                return defaultData;
+            }
+            return JSON.parse(data);
+        }
+
+        function saveDB(data) {
+            localStorage.setItem('future_stars_tc_db', JSON.stringify(data));
+            renderTable();
+        }
+
+        function renderTable() {
+            let db = getDB();
+            document.getElementById('total-count').textContent = db.length;
+            let tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+            db.forEach((item, idx) => {
+                let tr = document.createElement('tr');
+                tr.className = idx % 2 === 0 ? 'bg-white' : 'bg-slate-50';
+                tr.innerHTML = `
+                    <td class="p-2.5 border text-center font-medium">${idx + 1}</td>
+                    <td class="p-2.5 border text-center font-mono">${item.adm || '-'}</td>
+                    <td class="p-2.5 border font-bold text-blue-900">${item.name || '-'}</td>
+                    <td class="p-2.5 border">${item.father || '-'}</td>
+                    <td class="p-2.5 border text-center font-bold text-red-600 font-mono">${item.tc || '-'}</td>
+                    <td class="p-2.5 border text-center">${item.grade || '-'}</td>
+                    <td class="p-2.5 border text-slate-700">${item.remark || '-'}</td>
+                    <td class="p-2.5 border text-center">
+                        <button onclick="deleteRecord(${idx})" class="bg-red-100 hover:bg-red-200 text-red-700 text-xs font-bold px-2.5 py-1 rounded">ဖျက်ရန်</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.deleteRecord = function(idx) {
+            if (confirm("ဤစာရင်းကို ဖျက်ရန် သေချာပါသလား?")) {
+                let db = getDB();
+                db.splice(idx, 1);
+                saveDB(db);
+            }
+        };
+
+        document.getElementById('add-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let newItem = {
+                adm: document.getElementById('input-adm').value.trim(),
+                name: document.getElementById('input-name').value.trim(),
+                father: document.getElementById('input-father').value.trim(),
+                tc: document.getElementById('input-tc').value.trim(),
+                grade: document.getElementById('input-grade').value,
+                remark: document.getElementById('input-remark').value.trim()
+            };
+            let db = getDB();
+            db.push(newItem);
+            saveDB(db);
+            this.reset();
+            alert("စာရင်းအသစ် ထည့်သွင်းပြီးပါပြီ!");
+        });
+
+        document.getElementById('reset-default-btn').addEventListener('click', function() {
+            if (confirm("မူလနမူနာစာရင်းသို့ ပြန်ပြောင်းမည်မှာ သေချာပါသလား?")) {
+                saveDB(defaultData);
+                alert("မူလစာရင်းသို့ ပြန်ပြောင်းပြီးပါပြီ။");
+            }
+        });
+
+        // Excel Upload
+        document.getElementById('excel-file-input').addEventListener('change', function(e) {
+            let file = e.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    let data = new Uint8Array(evt.target.result);
+                    let workbook = XLSX.read(data, { type: 'array' });
+                    let sheetName = workbook.SheetNames[0];
+                    let worksheet = workbook.Sheets[sheetName];
+                    let json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                    let parsed = [];
+                    let startRow = 0;
+                    for (let i = 0; i < json.length; i++) {
+                        let rowStr = JSON.stringify(json[i]);
+                        if (rowStr.includes("TC အမှတ်") || rowStr.includes("ကျောင်းဝင်အမှတ်")) {
+                            startRow = i + 1;
+                            break;
+                        }
+                    }
+                    if (startRow === 0) startRow = 5;
+
+                    for (let i = startRow; i < json.length; i++) {
+                        let r = json[i];
+                        if (!r || r.length === 0) continue;
+                        let adm = r[1] || '';
+                        let name = r[2] || '';
+                        let father = r[3] || '';
+                        let tc = r[4] || '';
+                        let grade = r[5] || '';
+                        let remark = r[6] || '';
+
+                        if (!tc && r.length >= 3) {
+                            for (let cell of r) {
+                                if (cell && String(cell).toUpperCase().includes('TC')) {
+                                    tc = cell;
+                                }
+                            }
+                        }
+
+                        if (tc) {
+                            parsed.push({
+                                adm: String(adm),
+                                name: String(name),
+                                father: String(father),
+                                tc: String(tc),
+                                grade: String(grade),
+                                remark: String(remark)
+                            });
+                        }
+                    }
+
+                    if (parsed.length > 0) {
+                        saveDB(parsed);
+                        document.getElementById('upload-status.textContent') = `✅ အောင်မြင်စွာ တင်သွင်းပြီးပါပြီ (${parsed.length} စောင်)`;
+                        alert(`Excel ဖိုင်မှ ဒေတာ ${parsed.length} ခု အောင်မြင်စွာ ဝင်ရောက်သွားပါပြီ!`);
+                    } else {
+                        alert("Excel ဖိုင်ထဲမှ TC အမှတ် ကော်လံကို ရှာမတွေ့ပါ။");
+                    }
+                } catch(err) {
+                    console.error(err);
+                    alert("ဖိုင်ဖတ်ရှုရာတွင် အမှားအယွင်း ရှိနေပါသည်။");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        // Export Backup
+        document.getElementById('export-btn').addEventListener('click', function() {
+            let db = getDB();
+            let ws_data = [["စဉ်", "ကျောင်းဝင်အမှတ်", "အမည်", "အဘအမည်", "TC အမှတ်", "အတန်း", "မှတ်ချက်"]];
+            db.forEach((item, i) => {
+                ws_data.push([i+1, item.adm, item.name, item.father, item.tc, item.grade, item.remark]);
+            });
+            let wb = XLSX.utils.book_new();
+            let ws = XLSX.utils.aoa_to_sheet(ws_data);
+            XLSX.utils.book_append_sheet(wb, ws, "TC_စာရင်း");
+            XLSX.writeFile(wb, "Future_Stars_TC_Backup.xlsx");
+        });
+
+        renderTable();
+    </script>
+</body>
+</html>
